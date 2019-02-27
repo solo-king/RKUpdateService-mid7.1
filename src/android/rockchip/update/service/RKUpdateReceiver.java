@@ -65,6 +65,11 @@ public class RKUpdateReceiver extends BroadcastReceiver
             context.startService(serviceIntent);
             
             isBootCompleted = true;
+
+            /**启动DealThingsService */
+            Intent dealServiceIntent =  new Intent(context, DealThingsService.class);
+            context.startService(dealServiceIntent);
+            
         }else if( action.equals(Intent.ACTION_MEDIA_MOUNTED) && isBootCompleted) {              
             String[] path = { intent.getData().getPath() };
             //serviceIntent = new Intent("android.rockchip.update.service");

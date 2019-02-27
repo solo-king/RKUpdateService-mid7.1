@@ -55,6 +55,8 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </service>
+        <!-- 用于隔离服务链接的差异 -->
+        <service android:name=".DealThingsService"></service>
         
         <activity android:name=".FirmwareUpdatingActivity" android:exported="true"
             android:theme="@android:style/Theme.Holo.Dialog"
@@ -101,6 +103,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 		</activity>
-
+        <!--必须添加，为mqtt库中使用到-->
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
     </application>
 </manifest> 

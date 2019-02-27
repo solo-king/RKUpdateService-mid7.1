@@ -41,6 +41,7 @@ import android.os.storage.DiskInfo;
 import java.util.List;
 import java.io.FileNotFoundException;
 
+
 public class RKUpdateService extends Service {
 	public static final String VERSION = "1.8.0";
 	private static final String TAG = "RKUpdateService";
@@ -224,8 +225,8 @@ public class RKUpdateService extends Service {
         try {
         	mRemoteURI = new URI(getRemoteUri());
         	mRemoteURIBackup = new URI(getRemoteUriBackup());
-        	LOG("remote uri is " + mRemoteURI.toString());
-        	LOG("remote uri backup is " + mRemoteURIBackup.toString());
+        	//LOG("remote uri is " + mRemoteURI.toString());
+        	//LOG("remote uri backup is " + mRemoteURIBackup.toString());
         }catch(URISyntaxException e) {
         	e.printStackTrace();
         }
@@ -394,39 +395,24 @@ public class RKUpdateService extends Service {
 						return;
 					}
                     Log.d(TAG,"COMMAND_CHECK_REMOTE_UPDATING");
-                	for(int i = 0; i < 2; i++) {
-	                	try {
-	                		boolean result;
-	                		
-	                		if(i == 0) {
-	                			mUseBackupHost = false;
-	                			//result = requestRemoteServerForUpdate(mRemoteURI);
-	                		}else{
-	                			mUseBackupHost = true;
-	                			//result = requestRemoteServerForUpdate(mRemoteURIBackup);
-                            }
-                            /**供测试使用,强制进行网络升级 */
-	                		result=true;
-                			if(result) {
-                    			LOG("find a remote update package, now start PackageDownloadActivity...");
-                    			startNotifyActivity();
-                    		}else {
-                    			LOG("no find remote update package...");
-                    			myMakeToast(mContext.getString(R.string.current_new));
-                    		}
-                			break;
-	                	}catch(Exception e) {
-	                		//e.printStackTrace();
-	                		LOG("request remote server error...");
-	                		myMakeToast(mContext.getString(R.string.current_new));
-	                	}
-	                	
-	                	try{
-	                		Thread.sleep(5000);
-	                	}catch(InterruptedException e) {
-	                		e.printStackTrace();
-	                	}
-                	}
+                    try {
+                        /**是否下载固件标志 */
+                        boolean result = false;
+                        result = requestRemoteServerFirmware();
+                        if(result) {
+                            LOG("find a remote update package, now start PackageDownloadActivity...");
+                            startNotifyActivity();
+                        }else {
+                            LOG("no find remote update package...");
+                            myMakeToast(mContext.getString(R.string.current_new));
+                        }
+                        break;
+                    }catch(Exception e) {
+                        //e.printStackTrace();
+                        LOG("request remote server error...");
+                        myMakeToast(mContext.getString(R.string.current_new));
+                    }
+                    
                 	break;
                 case COMMAND_DELETE_UPDATEPACKAGE:
                 	//if mIsNeedDeletePackage == true delete the package
@@ -451,6 +437,11 @@ public class RKUpdateService extends Service {
         }
 
     }  
+    /**用于决定是否从远端服务器下载升级固件 */
+    private boolean requestRemoteServerFirmware(){
+        
+        return false;
+    }
 
     private String[] findFromSdOrUsb() {
         final int userId = UserHandle.myUserId();
@@ -660,7 +651,6 @@ public class RKUpdateService extends Service {
         Intent intent = new Intent(mContext, PackageDownloadActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         //intent.putExtra("uri", mTargetURI);
-        intent.putExtra("uri", "ftp://chenqigan:nibaba@10.10.10.206/update.zip");
 		intent.putExtra("OtaPackageLength", mOtaPackageLength);
         //intent.putExtra("OtaPackageName", mOtaPackageName);
         intent.putExtra("OtaPackageName", "update.zip");

@@ -12,17 +12,21 @@ LOCAL_SRC_FILES := $(call all-subdir-java-files)
 LOCAL_PACKAGE_NAME := RKUpdateService-mid7.1
 LOCAL_JNI_SHARED_LIBRARIES := librockchip_update_jni
 LOCAL_REQUIRED_MODULES := librockchip_update_jni
-LOCAL_STATIC_JAVA_LIBRARIES += ftp4j-1.7.2
-LOCAL_STATIC_JAVA_LIBRARIES += http
-#LOCAL_CERTIFICATE := media
+LOCAL_STATIC_JAVA_LIBRARIES += ftp4j-1.7.2 \
+				http \
+				mqttService \
+				mqttClient \
+				android-support-v4
 LOCAL_CERTIFICATE := platform
 
 include $(BUILD_PACKAGE)
 
 include $(CLEAR_VARS) 
 
-LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := ftp4j-1.7.2:/libs/ftp4j-1.7.2.jar http:libs/org.apache.http.legacy.jar
-
+LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := ftp4j-1.7.2:/libs/ftp4j-1.7.2.jar \
+					http:libs/org.apache.http.legacy.jar \
+					mqttService:libs/org.eclipse.paho.android.service-1.1.1.jar \
+					mqttClient:libs/org.eclipse.paho.client.mqttv3-1.1.1.jar
 include $(BUILD_MULTI_PREBUILT)
 # ============================================================
 
